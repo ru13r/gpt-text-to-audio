@@ -1,8 +1,11 @@
 import fs from 'fs';
 import path from 'path';
-import pdf from 'pdf-parse/lib/pdf-parse.js';
 import OpenAI from 'openai';
 import * as dotenv from 'dotenv';
+
+import pdf from 'pdf-parse/lib/pdf-parse.js';
+// (.../lib/... required to work correctly with ES modules)
+
 
 const splitTextIntoChunks = (text, maxSize) => {
     const words = text.split(/\s+/);  // Split text into words
@@ -21,30 +24,27 @@ const splitTextIntoChunks = (text, maxSize) => {
     if (currentChunk.length > 0) {
         chunks.push(currentChunk);  // Push the last chunk if any
     }
-
     return chunks;
 };
 
-// Function to read PDF and extract text chunks
+// Function reads PDF and and returns the array of chunks
 const readPdfText = async (pdfPath) => {
   const dataBuffer = await fs.promises.readFile(pdfPath);
   const data = await pdf(dataBuffer);
   return splitTextIntoChunks(data.text, 4000);
+  // (current TTS AI limit is 4096 chars per chunk)
 };
 
-// Function to convert text to MP3 using OpenAI's TTS API
-const textToMp3 = async (textChunk) => {
-  // Configure OpenAI API
-  dotenv.config();
-  const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
+// Returns a function to convert text to audio using OpenAI's TTS API
+const getTTSFunction = (openai) => async (textChunk, index) => {
   const mp3 = await openai.audio.speech.create({
     model: "tts-1",
     voice: "onyx",
     input: textChunk,
   });
-  return Buffer.from(await mp3.arrayBuffer());
+  const mp3Data = Buffer.from(await mp3.arrayBuffer());
+  console.log(`Chunk ${index + 1} processed successfully.`);
+  return mp3Data;
 };
 
 // Function to write MP3 data to a file
@@ -58,19 +58,24 @@ const main = async () => {
   const [,, pdfPath, outputFlag, outputPath] = process.argv;
 
   if (outputFlag === '-o' && pdfPath && outputPath) {
-    const chunks = await readPdfText(pdfPath);
+      const chunks = await readPdfText(pdfPath);
 
-    console.log(`Processing ${chunks.length} chunks in parallel.`);
-    const mp3Promises = chunks.map(async (chunk, index) => {
-        const mp3Data = await textToMp3(chunk);
-        console.log(`Chunk ${index + 1} processed successfully.`);
-        return mp3Data;
+      // Configure OpenAI API and the processing function
+      dotenv.config();
+      const openai = new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY,
       });
+      const textToVoice = getTTSFunction(openai);
 
-    const mp3Chunks = await Promise.all(mp3Promises);
-    const combinedMp3Data = Buffer.concat(mp3Chunks);  // Combine all MP3 data into a single buffer
-    await writeMp3ToFile(combinedMp3Data, outputPath);  // Write the combined MP3 data to file
-    console.log(`Audiobook saved as ${outputPath}`);
+      // convert the array of text chunks to the array of mp3 buffer promises
+      console.log(`Processing ${chunks.length} chunks in parallel.`);
+      const mp3Promises = chunks.map(textToVoice);
+      const mp3Chunks = await Promise.all(mp3Promises);
+
+      // combine all buffers
+      const combinedMp3Data = Buffer.concat(mp3Chunks);  // Combine all MP3 data into a single buffer
+      await writeMp3ToFile(combinedMp3Data, outputPath);  // Write the combined MP3 data to file
+      console.log(`Audiobook saved as ${outputPath}`);
   } else {
     console.log('Usage: node app.js file.pdf -o output.mp3');
   }
