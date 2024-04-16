@@ -15,7 +15,7 @@ node_modules/
 
 # Yarn
 .yarn-integrity
-.yarn.lock
+yarn.lock
 
 # dotenv environment variables file
 .env
@@ -35,8 +35,8 @@ node_modules/
 # IDEs
 .idea
 
-#
-.pdf
-.mp3
+# Sample files
+*.pdf
+*.mp3
 
 
