@@ -1,5 +1,5 @@
 {
-  "name": "gpt-text-to-audio",
+  "name": "gpt-tools",
   "version": "0.1",
   "description": "Convert PDF, HTML and Markdown file to audible formats.",
   "main": "index.js",

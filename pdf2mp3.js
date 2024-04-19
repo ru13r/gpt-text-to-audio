@@ -77,7 +77,7 @@ const main = async () => {
       await writeMp3ToFile(combinedMp3Data, outputPath);  // Write the combined MP3 data to file
       console.log(`Audiobook saved as ${outputPath}`);
   } else {
-    console.log('Usage: node app.js file.pdf -o output.mp3');
+    console.log('Usage: node pdf2mp3.js file.pdf -o output.mp3');
   }
 }
 
