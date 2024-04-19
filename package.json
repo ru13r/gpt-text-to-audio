@@ -3,7 +3,7 @@
   "version": "0.1",
   "description": "Convert PDF, HTML and Markdown file to audible formats.",
   "main": "index.js",
-  "repository": "https://github.com/ru13r/gpt-text-to-audio.git",
+  "repository": "https://github.com/ru13r/gpt-tools.git",
   "author": "Alexey Rodimov",
   "license": "MIT",
   "private": false,
