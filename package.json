@@ -1,7 +1,7 @@
 {
   "name": "gpt-tools",
   "version": "0.1",
-  "description": "Convert PDF, HTML and Markdown file to audible formats.",
+  "description": "A set of prototype Node.js command line tools for OpenAI API",
   "main": "index.js",
   "repository": "https://github.com/ru13r/gpt-tools.git",
   "author": "Alexey Rodimov",

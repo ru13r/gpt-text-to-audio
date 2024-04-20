@@ -1,4 +1,4 @@
-import { writeMp3ToFile } from './lib/mp3.js';
+import { writeMediaToFile } from './lib/media.js';
 import { splitTextIntoChunks } from './lib/text.js';
 import { readPdfText } from './lib/pdf.js';
 import { textChunkToSpeech } from './api/functions.js';
@@ -12,7 +12,6 @@ const main = async () => {
 
   if (outputFlag === '-o' && pdfPath && outputPath) {
       const data = await readPdfText(pdfPath);
-      console.log(`Read PDF file. Splitting into chunks...`);
       const chunks = splitTextIntoChunks(data, TTS_CHUNK_SIZE);
 
       // convert the array of text chunks to the array of mp3 buffer promises
@@ -22,8 +21,7 @@ const main = async () => {
 
       // combine all buffers and save to file
       const combinedMp3Data = Buffer.concat(mp3Chunks);  // Combine all MP3 data into a single buffer
-      await writeMp3ToFile(combinedMp3Data, outputPath);  // Write the combined MP3 data to file
-      console.log(`Audiobook saved as ${outputPath}`);
+      await writeMediaToFile(combinedMp3Data, outputPath);  // Write the combined media (MP3) data to file
   } else {
     console.log('Usage: node pdf2mp3.js file.pdf -o output.mp3');
   }

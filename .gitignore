@@ -36,7 +36,10 @@ yarn.lock
 .idea
 
 # Sample files
+samples/
 *.pdf
 *.mp3
+*.m4a
+*.txt
 
 
