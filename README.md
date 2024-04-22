@@ -95,3 +95,24 @@ within API constraints for transcription.
 * The output is saved to a single text file.
 * Temporary chunk files are removed.
 
+
+### Text improvement (improve)
+
+Improves text quality using the gpt-4-turbo model.
+
+#### Features
+- Works with larger files. Assumes each paragraph has length not exceeding the API limit.
+- Improves the text using OpenAI's **gpt-4-turbo** model.
+
+#### Usage
+
+Run the utility with a command in the following format:
+
+```bash
+node improve.js <text_file> -o <output_file.txt>
+```
+
+#### How It Works
+* The utility first splits the file using newlines.
+* Each chunk is then sent to GPT completion API.
+* The output is saved to a single text file.
