@@ -5,7 +5,7 @@ A set of prototype Node.js command line tools for OpenAI API.
 ## Prerequisites
 
 Before you run these tools, you need the following:
-- Node.js installed on your system.
+- [Node.js](https://nodejs.org/en) installed on your system.
 - An API key from OpenAI.
 
 ## Installation
