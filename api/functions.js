@@ -25,17 +25,17 @@ export const speechToText = async (streamChunk, index) => {
   return transcription.text;
 };
 
-// Returns a function to convert text to audio using OpenAI's TTS API
+// Returns a function to improve text using the selected model
 export const textImprove = async (textChunk, index) => {
   const openai = getOpenAIClient();
 
   const completion = await openai.chat.completions.create({
-    model: `gpt-4-turbo`,
-    temperature: 0.2,
+    model: `gpt-4o-2024-05-13`,
+    temperature: 0.1,
     messages: [
       {
         role: `system`,
-        content: `Improve the provided text. Keep original language.`
+        content: `Улучши текст, убери вводные слова и выражения`
       },
       {
         role: `user`,

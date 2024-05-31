@@ -10,11 +10,8 @@ let openAIInstance = null;
 
 // Function to get or create the singleton OpenAI instance
 export const getOpenAIClient = () => {
-  if (!openAIInstance) {
-    // Create the OpenAI instance only if it doesn't already exist
-    openAIInstance = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
-  }
-  return openAIInstance;
+    if (!openAIInstance) {
+        openAIInstance = new OpenAI();
+    }
+    return openAIInstance
 }
